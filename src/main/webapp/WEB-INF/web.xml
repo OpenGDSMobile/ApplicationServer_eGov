@@ -3,7 +3,6 @@
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-     
 	<display-name>Mobile</display-name>
 	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -37,7 +36,8 @@
     	
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath*:egovframework/spring/context-*.xml</param-value>
+		<param-value>classpath*:OpenGDSMobile/spring/context-*.xml</param-value>
+		<!--classpath*:egovframework/spring/context-*.xml -->
 	</context-param>
 	
 	<listener>
@@ -49,7 +49,8 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/config/egovframework/springmvc/*-servlet.xml</param-value>
+			<param-value>/WEB-INF/config/OpenGDSMobile/*-servlet.xml</param-value>
+			<!--/WEB-INF/config/egovframework/springmvc/*-servlet.xml -->
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -64,6 +65,7 @@
 	
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
     
 	<login-config>
