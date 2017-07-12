@@ -11,4 +11,5 @@
 	<update id="UpdateTable" parameterType="hashmap">
 		UPDATE ${tableName} SET ${column}='${dstData}' WHERE ${column}='${srcData}';
 	</update>
+ 
 </mapper>

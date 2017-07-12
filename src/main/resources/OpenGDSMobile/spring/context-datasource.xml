@@ -9,7 +9,8 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-	<util:properties id="pgProperties" location="classpath:/OpenGDSMobile/property/jdbc.properties" />
+		
+	<util:properties id="pgProperties" location="classpath:OpenGDSMobile/property/jdbc.properties" />
 	<!-- PostgreSQL JDBC setting -->
 	<bean id="dataSource-postgresql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="#{pgProperties['jdbc.driverClassName']}" />
@@ -22,4 +23,5 @@
 	<bean id="sqlSession-postgresql" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSession" />
 	</bean>	
-</beans>
+			
+</beans> 

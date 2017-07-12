@@ -37,7 +37,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath*:OpenGDSMobile/spring/context-*.xml</param-value>
-		<!--classpath*:egovframework/spring/context-*.xml -->
+		<!-- <param-value>classpath*:egovframework/spring/context-*.xml</param-value> -->
 	</context-param>
 	
 	<listener>
@@ -50,7 +50,7 @@
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/config/OpenGDSMobile/*-servlet.xml</param-value>
-			<!--/WEB-INF/config/egovframework/springmvc/*-servlet.xml -->
+			<!-- <param-value>/WEB-INF/config/egovframework/springmvc/*-servlet.xml</param-value> -->
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
