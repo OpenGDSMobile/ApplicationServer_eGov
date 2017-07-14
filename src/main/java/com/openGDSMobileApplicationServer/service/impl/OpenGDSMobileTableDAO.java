@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.openGDSMobileApplicationServer.valueObject.CollectVO;
+
 import egovframework.rte.psl.dataaccess.EgovAbstractMapper;
 
 
@@ -29,7 +31,9 @@ public class OpenGDSMobileTableDAO extends EgovAbstractMapper {
 	List<LinkedHashMap<String, Object>> tableContentList = new ArrayList<LinkedHashMap<String,Object>>();
 	Logger log = LogManager.getLogger("ERROR");
 	
-
+/**
+ * 
+ */
 	public List<LinkedHashMap<String, Object>> attributeSelectTableInfo(JSONObject tableName) {
 		HashMap<String, Object> hashMapTableName = (HashMap<String, Object>) toMap(tableName);
 		try{
@@ -50,7 +54,9 @@ public class OpenGDSMobileTableDAO extends EgovAbstractMapper {
 		}		
 		return 0;
 	}
-
+/**
+ * 
+ */
 	public List<LinkedHashMap<String, Object>> realtimeSelectTableInfo() {
 		List<LinkedHashMap<String, Object>> tableContentList = new ArrayList<LinkedHashMap<String,Object>>();
 		try{
@@ -110,6 +116,38 @@ public class OpenGDSMobileTableDAO extends EgovAbstractMapper {
 		HashMap<String, Object> hashMapTableName = (HashMap<String, Object>) toMap(type);	
 		return sess.delete("OpenGDSMobileTable.RealTime.DeleteData", hashMapTableName);
 	}
+
+	
+/**
+ * 	
+ */
+   public Boolean insertDataCollect(CollectVO collect) {
+        int result = sess.insert("OpenGDSMobileTable.Collected.InsertData", collect);
+        System.out.println(result);
+        return (result == 1) ? true : false;
+    }
+    public List<CollectVO> findAllCollect(){
+        List<CollectVO> list = sess.selectList("OpenGDSMobileTable.Collected.findAllCollected");
+        return list;
+    }
+    public CollectVO findOneCollect(String name) {
+        return sess.selectOne("OpenGDSMobileTable.Collected.findOneCollected", name);
+    }
+    public Boolean updateStatusCollect(CollectVO collect) {
+        int result = sess.update("OpenGDSMobileTable.Collected.updateStatus", collect);
+        return (result == 1) ? true : false;
+    }
+    public Boolean updateDataCollect(CollectVO collect) {
+        int result = sess.update("OpenGDSMobileTable.Collected.updateData", collect);
+        return (result == 1) ? true : false;
+    }
+    public Boolean deleteCollect(String name){
+        int result = sess.delete("OpenGDSMobileTable.Collected.deleteData", name);
+        return true;
+    }
+	
+	
+	
 	
 	
     public static Map<String, Object> getMap(JSONObject object, String key) throws JSONException {

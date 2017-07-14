@@ -146,6 +146,7 @@
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901-1.jdbc4</version>
 		</dependency>
+		
 		<!-- MongoDB -->
 		<dependency>
 		    <groupId>org.mongodb</groupId>
@@ -156,7 +157,8 @@
 		    <groupId>org.springframework.data</groupId>
 		    <artifactId>spring-data-mongodb</artifactId>
 		    <version>1.10.4.RELEASE</version>
-		</dependency>			
+		</dependency>	
+				
 		<!-- geoserver manager --> 
 		<dependency>
 			<groupId>it.geosolutions</groupId>
@@ -190,7 +192,6 @@
 			<version>2.0.5</version>
 		</dependency>
 		
-		
 		<!-- webSocket  -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -203,6 +204,13 @@
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-collections4</artifactId>
 		    <version>4.0</version>
+		</dependency>
+		
+		<!-- Quartz Scheduler -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.2.1</version>
 		</dependency>
 		
 		
