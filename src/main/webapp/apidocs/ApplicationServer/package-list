@@ -1,0 +1,7 @@
+com.openGDSMobileApplicationServer
+com.openGDSMobileApplicationServer.api
+com.openGDSMobileApplicationServer.service
+com.openGDSMobileApplicationServer.service.impl
+com.openGDSMobileApplicationServer.valueObject
+com.openGDSMobileApplicationServer.web
+com.openGDSMobileApplicationServer.webSocket
