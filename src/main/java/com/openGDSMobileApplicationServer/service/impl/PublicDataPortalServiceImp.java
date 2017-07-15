@@ -130,4 +130,10 @@ public class PublicDataPortalServiceImp extends EgovAbstractServiceImpl implemen
 		log.info(result);
 		return result;
 	}
+
+	@Override
+	public String requestData(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

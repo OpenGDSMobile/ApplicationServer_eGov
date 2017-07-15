@@ -7,4 +7,5 @@ import org.json.JSONObject;
 public interface PublicDataService {
 
 	Object requestPublicData(JSONObject data);
+	String requestData(String name);
 }

@@ -12,7 +12,24 @@ public class MappingController {
 		return "webmapping/integratedDemo";
 	}
 	
-	
+    @RequestMapping(value="/ODM_Dashboard.do")
+    String index() {
+        return "webmapping/collected/index";
+    }
+
+    @RequestMapping(value="/ODM_Management.do")
+    String management() {return "webmapping/collected/management"; }
+
+    @RequestMapping(value="/ODM_Original.do")
+    String original() {return "webmapping/collected/vis/original"; }
+
+    @RequestMapping(value="/ODM_Chart.do")
+    String chart() {return "webmapping/collected/vis/chart"; }
+
+    @RequestMapping(value="/ODM_Map.do")
+    String map() {return "webmapping/collected/vis/map"; }
+
+
 	/*
 	@Autowired
 	@Qualifier("realtimeTable")

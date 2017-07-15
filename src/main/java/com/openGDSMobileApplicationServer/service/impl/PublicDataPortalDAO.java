@@ -1,6 +1,8 @@
 package com.openGDSMobileApplicationServer.service.impl;
  
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.jdom2.Document;
@@ -39,6 +41,12 @@ public class PublicDataPortalDAO  implements PublicData{
 			return null;
 		}
 		
+	}
+
+	@Override
+	public JSONObject getOpenDataJSON(String path, String encoding) throws URISyntaxException, IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

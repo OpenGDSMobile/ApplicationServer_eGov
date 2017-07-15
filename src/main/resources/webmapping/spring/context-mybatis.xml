@@ -8,6 +8,7 @@
 			<list>
 				<value>classpath:/webmapping/sqlmap/attributeQuery.xml</value>
 				<value>classpath:/webmapping/sqlmap/realtimeQuery.xml</value>
+				<value>classpath:/webmapping/sqlmap/collectedQuery.xml</value>
 			</list>
 		</property>
 	</bean> 

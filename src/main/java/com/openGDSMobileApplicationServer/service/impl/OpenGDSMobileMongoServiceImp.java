@@ -10,7 +10,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 @Service
-public class OpenGDSMobileMongoService {
+public class OpenGDSMobileMongoServiceImp {
 	
 	@Autowired
 	OpenGDSMobileMongoDAO dao;
