@@ -18,7 +18,7 @@ public class MongoDBController {
     @Autowired
     OpenGDSMobileMongoServiceImp service;
 
-    @RequestMapping (value="/{name}", method = {RequestMethod.GET})
+    @RequestMapping (value="/{name}.do", method = {RequestMethod.GET})
     public List<Object> findAllCollection(@PathVariable String name){
         return service.findAllCollection(name);
     }
@@ -30,7 +30,7 @@ public class MongoDBController {
      * @param fieldName key value
      * @return
      */
-    @RequestMapping (value="/{name}/{fieldName}", method = {RequestMethod.GET})
+    @RequestMapping (value="/{name}/{fieldName}.do", method = {RequestMethod.GET})
     public List<Object> findAllFieldCollection(@PathVariable String name, @PathVariable String fieldName){
         return service.findFieldCollection(name, fieldName);
     }
@@ -40,7 +40,7 @@ public class MongoDBController {
      * @param name  get first value
      * @return
      */
-    @RequestMapping (value="/selectOne/{name}", method = {RequestMethod.GET})
+    @RequestMapping (value="/selectOne/{name}.do", method = {RequestMethod.GET})
     public Object findFirstCollection(@PathVariable String name){
 
         return service.findFirstCollection(name);
@@ -51,7 +51,7 @@ public class MongoDBController {
      * @param request  get Value based on (collection name, key)
      * @return
      */
-    @RequestMapping (value="/getValues", method = {RequestMethod.GET})
+    @RequestMapping (value="/getValues.do", method = {RequestMethod.GET})
     public Object runCommandGetValues(HttpServletRequest request){
         String name = request.getParameter("name");
         String key = request.getParameter("key");
@@ -65,13 +65,14 @@ public class MongoDBController {
      *                (option) specific fields:sFields]
      * @return
      */
-    @RequestMapping (value="/query/{name}", method = {RequestMethod.GET})
+    @RequestMapping (value="/query/{name}.do", method = {RequestMethod.GET})
     public Object queryCollection(@PathVariable("name") String name, HttpServletRequest request){
         String queryType = request.getParameter("queryType");
         String field = request.getParameter("field");
         String value = request.getParameter("value");
         String sFields = request.getParameter("sFields");
         String unwind = request.getParameter("unwind");
+        System.out.println(value);
         return service.queryWhereCollection(name, queryType, field, value, sFields, unwind);
     }
 

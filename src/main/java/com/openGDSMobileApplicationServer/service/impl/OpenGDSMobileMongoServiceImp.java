@@ -80,13 +80,13 @@ public class OpenGDSMobileMongoServiceImp {
 	    public String confimQueryType(String s){
 	        if (s.equals("=")){
 	            return "$eq";
-	        } else if (s.equals(">=")){
+	        } else if (s.equals(">=") || s.equals("&gt;=")){
 	            return "$gte";
-	        } else if (s.equals(">")){
+	        } else if (s.equals(">")|| s.equals("&gt;")){
 	            return "$gt";
-	        } else if (s.equals("<")){
+	        } else if (s.equals("<")|| s.equals("&lt;")){
 	            return "$lt";
-	        } else if (s.equals("<=")){
+	        } else if (s.equals("<=")|| s.equals("&lt;=")){
 	            return "$lte";
 	        }
 	        return null;

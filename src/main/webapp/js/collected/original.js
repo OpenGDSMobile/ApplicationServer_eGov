@@ -23,7 +23,7 @@ function syntaxHighlight(json) {
 $(function(){
 
     $.ajax({
-        url: contextRoot + 'api/Collected',
+        url: contextRoot + 'api/Collected.do',
         type : 'GET',
         success : function(evt){
             var selectObj = $('#collectName');
@@ -45,7 +45,7 @@ $(function(){
         var selectedText = $(this).find("option:selected").text();
 
         $.ajax({
-            url : contextRoot + 'api/MongoDB/' + selectedText + '/saveTime',
+            url : contextRoot + 'api/MongoDB/' + selectedText + '/saveTime.do',
             type  : 'GET',
             success : function (evt){
                 var selectObj = $('#collectDate');
@@ -77,7 +77,7 @@ $(function(){
         };
 
         $.ajax({
-            url : contextRoot + 'api/MongoDB/query/' + selectedVal[0],
+            url : contextRoot + 'api/MongoDB/query/' + selectedVal[0] + '.do',
             data : jsonData,
             type : 'GET',
             success : function (evt){

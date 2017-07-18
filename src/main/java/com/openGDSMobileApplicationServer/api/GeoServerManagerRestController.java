@@ -54,11 +54,10 @@ public class GeoServerManagerRestController {
 			return message;
 		}  
 	}
-    @RequestMapping(value="/GeoServer/{workspace}", method = {RequestMethod.GET})
+    @RequestMapping(value="/GeoServer/{workspace}.do", method = {RequestMethod.GET})
     public Object getDSLayersNames(@PathVariable String workspace){
 
-    //    return geoServerManagerObj.getDSLayers(workspace);
-    	return null;
+        return geoServerManagerObj.getDSLayers(workspace);
     }
 
 }

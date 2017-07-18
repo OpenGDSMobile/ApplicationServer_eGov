@@ -4,7 +4,8 @@ import java.net.MalformedURLException;
 import java.util.List;
 
 import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
-import it.geosolutions.geoserver.rest.GeoServerRESTReader; 
+import it.geosolutions.geoserver.rest.GeoServerRESTReader;
+import it.geosolutions.geoserver.rest.decoder.RESTFeatureTypeList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository("geodao")
 public class GeoServerManagerDAO{
  
-	static String geoServerUrl = "http://127.0.0.1/geoserver";
+	static String geoServerUrl = "http://113.198.80.9/geoserver";
 	static String geoServerUser = "admin";
 	static String geoServerPw = "geoserver";
 	
@@ -49,4 +50,13 @@ public class GeoServerManagerDAO{
 		return publisher;
 	} 
 
+    /**
+     * getWSLayers
+     * @param workspace : workspace name
+     * @return Object : layer list
+     */
+    public Object getWSLayers(String workspace){
+        RESTFeatureTypeList list = reader.getFeatureTypes(workspace);
+        return list;
+    }
 }

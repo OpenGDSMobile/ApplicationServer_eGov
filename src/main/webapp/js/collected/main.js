@@ -7,7 +7,7 @@ var contextRoot = contextRoot;
 function collectedListRequest() {
     var numTrue=0;
     $.ajax({
-        url : contextRoot + '/api/Collected.do',
+        url : contextRoot + 'api/Collected.do',
         type : 'GET',
         success : function (evt){
             var geoData = 0, json = 0, xml = 0;

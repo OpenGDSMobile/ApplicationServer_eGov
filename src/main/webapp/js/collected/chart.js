@@ -27,7 +27,7 @@ function collectNameEvt() {
     $('#chartVis').empty();
 
     $.ajax({
-        url : contextRoot + 'api/MongoDB/' + selectedText + '/saveTime',
+        url : contextRoot + 'api/MongoDB/' + selectedText + '/saveTime.do',
         type  : 'GET',
         success : function (evt){
             var selectObj = $('#collectStartTime');
@@ -53,7 +53,7 @@ function collectNameEvt() {
     });
 
     $.ajax({
-        url : contextRoot + 'api/MongoDB/selectOne/' + selectedText,
+        url : contextRoot + 'api/MongoDB/selectOne/' + selectedText + '.do',
         type : 'GET',
         success : function (evt){
             var selectObj = $('#collectDataKey');
@@ -133,7 +133,7 @@ function searchKeyEvt(){
         key : dataKey + '.' + keyValue
     };
     $.ajax({
-        url : contextRoot + 'api/MongoDB/getValues',
+        url : contextRoot + 'api/MongoDB/getValues.do',
         type : 'GET',
         data : jsonData,
         success: function(evt){
@@ -156,7 +156,7 @@ function searchKeyEvt(){
 
 $(function(){
     $.ajax({
-        url: contextRoot + 'api/Collected',
+        url: contextRoot + 'api/Collected.do',
         type : 'GET',
         success : function(evt){
             var selectObj = $('#collectName');
@@ -187,7 +187,7 @@ $(function(){
         $('#jsonResult').empty();
         $('#chartVis').empty();
        $.ajax({
-           url : contextRoot + 'api/MongoDB/query/' + selectedVal[0],
+           url : contextRoot + 'api/MongoDB/query/' + selectedVal[0] + '.do',
            data : jsonData,
            type : 'GET',
            success : function (evt){
@@ -289,12 +289,11 @@ $(function(){
         }
         console.log(jsonData);
         $.ajax({
-            url : contextRoot + 'api/MongoDB/query/' + name,
+            url : contextRoot + 'api/MongoDB/query/' + name + '.do',
             data : jsonData,
             success : function(evt){
                 $('#jsonResult').empty();
                 $('#chartVis').empty();
-
                 var json = JSON.stringify(evt[0]);
                 console.log(evt);
                 var chart = new openGDSMobile.ChartVis(json, {

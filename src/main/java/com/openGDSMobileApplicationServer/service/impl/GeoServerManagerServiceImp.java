@@ -30,4 +30,9 @@ public class GeoServerManagerServiceImp extends EgovAbstractServiceImpl implemen
 	public boolean removeWorkspace(String name) {
 		return geo_manager.geoserverRemoveWorkspace(name);
 	}
+	@Override
+	public Object getDSLayers(String workspace) {
+		// TODO Auto-generated method stub
+		return geo_manager.getWSLayers(workspace);
+	}
 }

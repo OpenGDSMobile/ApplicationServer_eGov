@@ -48,7 +48,7 @@ function geoDataSelectEvt(){
         coord.selectpicker('show');
         type.selectpicker('show');
         $.ajax({
-            url: contextRoot + 'api/MongoDB/selectOne/' + selectVal,
+            url: contextRoot + 'api/MongoDB/selectOne/' + selectVal + '.do',
             type: 'GET',
             success: function (evt) {
                 console.log(evt);
@@ -107,7 +107,7 @@ $(function(){
     mapObj = new openGDSMobile.MapVis('visMap');
 
     $.ajax({
-        url : contextRoot + 'api/GeoServer/' + workspace,
+        url : contextRoot + 'api/GeoServer/' + workspace + '.do',
         type : 'GET',
         success : function(evt){
             var selectObj = $('#selectGeoServer');
@@ -129,7 +129,7 @@ $(function(){
     });
 
     $.ajax({
-        url: contextRoot + 'api/Collected',
+        url: contextRoot + 'api/Collected.do',
         type : 'GET',
         success : function(evt){
             var selectObj = $('#selectPublicData');

@@ -84,6 +84,7 @@ public class OpenGDSMobileMongoDAO {
     }
 
     public List<Object> findWhereMultiQuery(String name, List<DBObject> query){
+    System.out.println(query.toString());
         AggregationOutput aggr= mongoOperations.getCollection(name).aggregate(query);
         Iterable<DBObject> iter = aggr.results();
         List<Object> result = new ArrayList<Object>();
@@ -102,16 +103,15 @@ public class OpenGDSMobileMongoDAO {
     }
 
     public Query queryExec(Query query, String queryType, String field, String q){
-
         if (queryType.equals("=")){
             query.addCriteria(Criteria.where(field).is(q));
-        } else if (queryType.equals(">=")){
+        } else if (queryType.equals(">=") || queryType.equals("&gt;=")){
             query.addCriteria(Criteria.where(field).gte(q));
-        } else if (queryType.equals(">")){
+        } else if (queryType.equals(">") || queryType.equals("&gt;")){
             query.addCriteria(Criteria.where(field).gt(q));
-        } else if (queryType.equals("<")){
+        } else if (queryType.equals("<") || queryType.equals("&lt;")){
             query.addCriteria(Criteria.where(field).lt(q));
-        } else if (queryType.equals("<=")){
+        } else if (queryType.equals("<=") || queryType.equals("&lt;=")){
             query.addCriteria(Criteria.where(field).lte(q));
         }
         return query;

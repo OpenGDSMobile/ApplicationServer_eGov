@@ -21,7 +21,7 @@
 
  
     <script>
-        var contextRoot ='${pageContext.request.contextPath}';
+        var contextRoot ='${pageContext.request.contextPath}' + '/';
     </script>
  
     <script src="js/collected/main.js"/></script>
@@ -46,10 +46,10 @@
         </div>
     </nav>
     <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
-        <div class="brand"><img th:src="@{/static/images/logo_hansung.png}" width="120px"/></div>
+        <div class="brand"><img src="images/logo_hansung.png" width="120px"/></div>
         <ul class="nav menu">
             <li class="active">
-                <a href="./ODM_Dashobard.do">
+                <a href="./ODM_Dashboard.do">
                     <span class="glyphicon glyphicon-off icon"></span>
                     <span>Dashboard</span>
                 </a>
