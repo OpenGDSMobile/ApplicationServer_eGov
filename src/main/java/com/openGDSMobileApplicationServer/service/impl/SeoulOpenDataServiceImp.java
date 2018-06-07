@@ -49,7 +49,8 @@ public class SeoulOpenDataServiceImp extends EgovAbstractServiceImpl implements 
 				serviceName = String.valueOf(data.get(tmp));
 			}			
 		} 
-		if(serviceName.equals("TimeAverageAirQuality") || serviceName.equals("RealtimeRoadsideStation")){
+		if(serviceName.equals("TimeAverageAirQuality") 
+				|| serviceName.equals("RealtimeRoadsideStation")){
 			String baseURL = "http://openapi.seoul.go.kr:8088/";
 			String[] urlOrder = 
 					new String []{"serviceKey", "returnType", "serviceName", "amount", "dateTimeValue"};

@@ -13,7 +13,10 @@ public class MongoDBConfiguration {
 	MongoTemplate mongoTemplate(){
         MongoTemplate mongoTemplate = null;
         try {
-            mongoTemplate = new MongoTemplate(new MongoClient("127.0.0.1"), "opengdsmobiledata");
+            mongoTemplate = 
+            		new MongoTemplate(
+            				new MongoClient("127.0.0.1"), 
+            				"opengdsmobiledata");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
