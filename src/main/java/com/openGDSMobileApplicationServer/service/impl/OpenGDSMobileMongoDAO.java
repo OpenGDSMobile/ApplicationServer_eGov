@@ -3,6 +3,8 @@ package com.openGDSMobileApplicationServer.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.BsonString;
+import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -31,6 +33,7 @@ public class OpenGDSMobileMongoDAO {
     public Boolean createCollection(String name, String indexes){
         if (!mongoOperations.getCollectionNames().contains(name)){
             mongoOperations.createCollection(name);
+            //mongoOperations.getCollection(name).createIndex(indexes);
             mongoOperations.getCollection(name).createIndex(indexes);
             return true;
         }
@@ -84,7 +87,7 @@ public class OpenGDSMobileMongoDAO {
     }
 
     public List<Object> findWhereMultiQuery(String name, List<DBObject> query){
-    System.out.println(query.toString());
+    	System.out.println(query.toString());
         AggregationOutput aggr= mongoOperations.getCollection(name).aggregate(query);
         Iterable<DBObject> iter = aggr.results();
         List<Object> result = new ArrayList<Object>();
