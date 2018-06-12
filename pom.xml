@@ -17,8 +17,8 @@
 	</licenses>
 
 	<properties>
-		<spring.maven.artifact.version>4.1.2.RELEASE</spring.maven.artifact.version>
-		<egovframework.rte.version>3.6.0</egovframework.rte.version>
+		<spring.maven.artifact.version>4.2.4.RELEASE</spring.maven.artifact.version>
+		<egovframework.rte.version>3.7.0</egovframework.rte.version>
 	</properties>
 
 	<repositories>
