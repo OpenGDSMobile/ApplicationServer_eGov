@@ -108,7 +108,6 @@ public class SeoulOpenDataServiceImp extends EgovAbstractServiceImpl implements 
 	 */
 	
 	public String requestData(String name) {
-        log.info("requestData & save :" + name);
 
         CollectVO serviceInfo = dao.findOneCollect(name);
         serviceURL = serviceInfo.getEp() + serviceInfo.getKeys();
@@ -119,21 +118,23 @@ public class SeoulOpenDataServiceImp extends EgovAbstractServiceImpl implements 
             String prevTime = this.getPrevyyyyMMdd();
             serviceURL = serviceURL + prevTime;
         }
-
+        log.info("request Service:" + name + ", URL:" + serviceURL);
+        JSONObject resultObj = null;
         try {
-            JSONObject resultObj = seoulDao.getOpenDataJSON(serviceURL, "UTF-8");
+            resultObj = seoulDao.getOpenDataJSON(serviceURL, "UTF-8");
             resultObj = resultObj.getJSONObject(serviceInfo.getName());
             resultObj.put("saveTime", this.getyyyyMMddHHMM());
-
-            mongoDao.createCollection(serviceInfo.getName(), "saveTime");
-            DBObject dbObject = (DBObject) JSON.parse(resultObj.toString());
-
-            mongoDao.insertData(serviceInfo.getName(), dbObject);
+            
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+        	log.info("request Service:" + name + ", result:" + resultObj.toString());
+            //throw new RuntimeException(e);
         }
 
+        mongoDao.createCollection(serviceInfo.getName(), "saveTime");
+        DBObject dbObject = (DBObject) JSON.parse(resultObj.toString());
+
+        mongoDao.insertData(serviceInfo.getName(), dbObject);
 
         return null;
     }

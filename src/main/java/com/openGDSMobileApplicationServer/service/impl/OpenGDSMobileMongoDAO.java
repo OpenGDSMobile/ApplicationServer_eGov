@@ -2,9 +2,7 @@ package com.openGDSMobileApplicationServer.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.bson.BsonString;
-import org.bson.conversions.Bson;
+ 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -33,7 +31,6 @@ public class OpenGDSMobileMongoDAO {
     public Boolean createCollection(String name, String indexes){
         if (!mongoOperations.getCollectionNames().contains(name)){
             mongoOperations.createCollection(name);
-            //mongoOperations.getCollection(name).createIndex(indexes);
             mongoOperations.getCollection(name).createIndex(indexes);
             return true;
         }
@@ -47,6 +44,7 @@ public class OpenGDSMobileMongoDAO {
         return false;
     }
     public Boolean insertData(String name, Object obj){
+    	System.out.println(name + " ");
         mongoOperations.insert(obj, name);
         return true;
     }
@@ -89,6 +87,7 @@ public class OpenGDSMobileMongoDAO {
     public List<Object> findWhereMultiQuery(String name, List<DBObject> query){
     	System.out.println(query.toString());
         AggregationOutput aggr= mongoOperations.getCollection(name).aggregate(query);
+    	////List<DBObject> aggr= mongoOperations.getCollection(name).aggregate(query);
         Iterable<DBObject> iter = aggr.results();
         List<Object> result = new ArrayList<Object>();
         DBObject root = new BasicDBObject();
@@ -98,11 +97,15 @@ public class OpenGDSMobileMongoDAO {
 
         }
         return result;
+    	//return null;
     }
 
     public Object findValueSearchQuery(String name, String key){
+    	System.out.println(name);
         CommandResult result = mongoOperations.executeCommand("{distinct: \"" + name + "\", key: \"" + key + "\"}");
+    	//Document result = mongoOperations.executeCommand("{distinct: \"" + name + "\", key: \"" + key + "\"}");
         return result.get("values");
+    	//return null;
     }
 
     public Query queryExec(Query query, String queryType, String field, String q){
