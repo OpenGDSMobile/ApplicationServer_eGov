@@ -1,6 +1,7 @@
 package com.openGDSMobileApplicationServer.service.impl;
  
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 
@@ -122,19 +123,26 @@ public class SeoulOpenDataServiceImp extends EgovAbstractServiceImpl implements 
         JSONObject resultObj = null;
         try {
             resultObj = seoulDao.getOpenDataJSON(serviceURL, "UTF-8");
-            resultObj = resultObj.getJSONObject(serviceInfo.getName());
-            resultObj.put("saveTime", this.getyyyyMMddHHMM());
             
+        	resultObj = resultObj.getJSONObject(serviceInfo.getName());    
+        	resultObj.put("saveTime", this.getyyyyMMddHHMM());
+            
+            mongoDao.createCollection(serviceInfo.getName(), "saveTime");
+            DBObject dbObject = (DBObject) JSON.parse(resultObj.toString());
+
+            mongoDao.insertData(serviceInfo.getName(), dbObject);	
 
         } catch (Exception e) {
-        	log.info("request Service:" + name + ", result:" + resultObj.toString());
+        	//log.info("request Service:" + name + ", result:" + serviceURL); 
             //throw new RuntimeException(e);
+        	log.info("No Data" + " request Service:" + name); 
+        	resultObj.put("saveTime", this.getyyyyMMddHHMM());
+        	resultObj.put("row", new JSONArray());      
+            DBObject dbObject = (DBObject) JSON.parse(resultObj.toString());
+        	//log.info(tmp.toString());
+            mongoDao.insertData(serviceInfo.getName(), dbObject);	
         }
 
-        mongoDao.createCollection(serviceInfo.getName(), "saveTime");
-        DBObject dbObject = (DBObject) JSON.parse(resultObj.toString());
-
-        mongoDao.insertData(serviceInfo.getName(), dbObject);
 
         return null;
     }

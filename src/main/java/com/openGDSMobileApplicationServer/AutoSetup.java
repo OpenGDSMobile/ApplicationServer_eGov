@@ -2,6 +2,8 @@ package com.openGDSMobileApplicationServer;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
@@ -27,6 +29,7 @@ public class AutoSetup implements ApplicationListener<ContextRefreshedEvent>{
 	    @Autowired
 	    private OpenGDSMobileTableDAO dao;
 
+	    Logger log = LogManager.getLogger("org.springframework");
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
         List<CollectVO> items = dao.findAllCollect();
@@ -44,7 +47,7 @@ public class AutoSetup implements ApplicationListener<ContextRefreshedEvent>{
                     .withIdentity(triggerKey)
                     .withSchedule(simpleSchedule().withIntervalInMinutes(time).repeatForever()).build();
                     /*.withSchedule(CronScheduleBuilder.cronSchedule(cron)).build();*/
-
+            
             try {
                 schedulerFactory.getScheduler().scheduleJob(job, trigger);
                 if (items.get(i).isStatus() == false) {

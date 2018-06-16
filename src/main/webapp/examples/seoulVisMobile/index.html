@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <title>Seoul Indoor Visualization</title>
+  <script src="libs/jquery/jquery-3.2.1.min.js" ></script>
+<!--
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.css"/>
+  -->
+  <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="libs/bootstrap/css/bootstrap-theme.min.css"/>
+  <script src="libs/bootstrap/js/bootstrap.min.js" ></script>
+
+  <link rel="stylesheet" href="libs/bootstrap-select/css/bootstrap-select.min.css"/>
+  <script src="libs/bootstrap-select/js/bootstrap-select.min.js"></script>
+  <script src="libs/bootstrap-select/js/i18n/defaults-en_US.min.js"></script>
+
+  <link rel="stylesheet" href="libs/ol3/css/ol.css"/>
+  <script src="libs/ol3/js/ol-debug.js" ></script>
+  <script src="libs/ol3/js/proj4.js"></script>
+
+  <script src="https://use.fontawesome.com/9411c5f9e1.js"></script>
+
+</head>
+<style>
+  html,
+  body{
+    width: 100%;
+    height: 100%;
+    padding : 0;
+    margin : 0;
+    /*font-size:10px;*/
+    overflow:hidden;
+  }
+  #map{
+    position:relative;
+    width: 100%;
+    height:100%;
+    z-index:1;
+  }
+  #dataList{
+    height:400px;
+    overflow-y:auto;
+    min-width: 250px;
+    border-top: 14px solid #0080c5;
+    border-right: 1px solid #0080c5;
+    border-bottom-right-radius:0.5em;
+    -moz-border-radius-bottomright:0.5em;
+    border-bottom: 3px solid #0080c5;
+    border-left: 1px solid #0080c5;
+    border-bottom-left-radius:0.5em;
+    -moz-border-radius-bottomleft:0.5em;
+   }
+  .ol-zoom{
+    left:unset;
+    right:8px;
+  }
+  .custom-btn{
+    background-color: rgba(0, 202, 92, 1);
+  }
+  .custom-size{
+    font-size:1.5em;
+    margin-right:10px;
+  }
+</style>
+<body>
+  <header>
+    <div class="navbar navbar-default" role="navigation" style="margin-bottom:0px;">
+      <div class="container-fluid navbar-border">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse"
+                  data-target="#bs-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"><i class="fa fa-home"></i>
+            Seoul Indoor in Korea</a>
+        </div>
+
+
+        <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li>
+              <form class="navbar-form" role="search">
+                <div class="input-group">
+                  <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                  <input id="dataSearch"
+                      type="text" class="form-control" placeholder="search" name="q">
+                </div>
+              </form>
+            </li>
+            <li><a href="#">
+              <!--<i class="fa fa-phone"></i>-->
+              Current Object: <span id="curName">None - None</span>
+              </a>
+            </li>
+          </ul> <!-- left navbar -->
+
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-cogs"></i>
+                <b class="color-blue">Object Info.</b>
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu login-panel">
+                <li>
+                  <div class="dropdown-header">
+                    <span class="login-header color-blue">Index List</span>
+                  </div>
+                  <div class="clearfix"></div>
+                  <div style="padding: 8px">
+                    <div id="layerRadio" class="funkyradio"
+                         style="height:100px; overflow-y:scroll">
+
+                    </div>
+                  </div>
+                  <div class="dropdown-header">
+                    <span class="login-header color-blue">Index Object</span>
+                  </div>
+                  <ul class="list-group">
+                    <li class="list-group-item floor-objects" style="background-color:rgba(108, 108, 108, 0.8); display:none;">
+                      WALL
+                      <div class="material-switch pull-right">
+                        <input id="chkWall" name="floorObject" type="checkbox" value="Wall"/>
+                        <label for="chkWall" class="label-default"></label>
+                      </div>
+                    </li>
+                    <li class="list-group-item floor-objects" style="background-color:rgba(255, 255, 255, 0.8); display:none;">
+                      SPACE
+                      <div class="material-switch pull-right">
+                        <input id="chkSpace" name="floorObject" type="checkbox" value="Space"/>
+                        <label for="chkSpace" class="label-default"></label>
+                      </div>
+                    </li>
+                    <li class="list-group-item floor-objects" style="background-color:rgba(76, 198, 67, 0.8); display:none;">
+                      COLUMN
+                      <div class="material-switch pull-right">
+                        <input id="chkColumn" name="floorObject" type="checkbox" value="Column"/>
+                        <label for="chkColumn" class="label-default"></label>
+                      </div>
+                    </li>
+                    <li class="list-group-item floor-objects" style="background-color:rgba(255, 99, 71, 0.8); display:none;">
+                      DOOR
+                      <div class="material-switch pull-right">
+                        <input id="chkDoor" name="floorObject" type="checkbox" value="Door"/>
+                        <label for="chkDoor" class="label-default"></label>
+                      </div>
+                    </li>
+                    <li class="list-group-item floor-objects" style="background-color:rgba(0, 128, 128, 0.8); display:none;">
+                      STAIR
+                      <div class="material-switch pull-right">
+                        <input id="chkStair" name="floorObject" type="checkbox" value="Stair"/>
+                        <label for="chkStair" class="label-default"></label>
+                      </div>
+                    </li>
+                    <li class="list-group-item floor-objects" style="background-color:rgba(245, 222, 179, 0.8); display:none;">
+                      WINDOWS
+                      <div class="material-switch pull-right">
+                        <input id="chkWindow" name="floorObject" type="checkbox" value="Window"/>
+                        <label for="chkWindow" class="label-default"></label>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li class="dropdown" id="dataListMenu">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-building"></i>
+                <b class="color-blue">List </b>
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu" id="dataList">
+              </ul>
+            </li>
+          </ul> <!-- right navbar -->
+        </div>  <!-- content navbar -->
+      </div>    <!-- container navbar -->
+    </div>      <!-- navigation navbar -->
+  </header>
+  <section>
+    <div id="map">
+      <div style="position:absolute; top:20px; left:0px; z-index:2;">
+
+        <ul class="list-group link-content-menu hide">
+          <li class="list-group-item custom-btn">
+            <i class="fa fa-info-circle custom-size" aria-hidden="true"></i>
+            <div class="material-switch pull-right">
+              <input id="chkNearby" name="linkerContent" value="nearby" type="checkbox"/>
+              <label for="chkNearby" class="label-default"></label>
+            </div>
+          </li>
+          <li class="list-group-item custom-btn">
+            <i class="fa fa-wheelchair custom-size" aria-hidden="true"></i>
+            <div class="material-switch pull-right">
+              <input id="chkHandi" name="linkerContent" value="handi" type="checkbox"/>
+              <label for="chkHandi" class="label-default"></label>
+            </div>
+          </li>
+          <li class="list-group-item custom-btn">
+            <i class="fa fa-sign-in custom-size" aria-hidden="true"></i>
+            <div class="material-switch pull-right">
+              <input id="chkEnter" name="linkerContent" value="enter" type="checkbox"/>
+              <label for="chkEnter" class="label-default"></label>
+            </div>
+          </li>
+          <li class="list-group-item custom-btn">
+            <i class="fa fa-shopping-cart custom-size" aria-hidden="true"></i>
+            <div class="material-switch pull-right">
+              <input id="chkShopping" name="linkerContent" value="shopping" type="checkbox"/>
+              <label for="chkShopping" class="label-default"></label>
+            </div>
+          </li>
+          <!--
+          <li class="list-group-item custom-btn">
+            <i class="fa fa-blind custom-size" aria-hidden="true"></i>
+            <div class="material-switch pull-right">
+              <input id="routerChk" name="linkerContent" type="checkbox"/>
+              <label for="routerChk" class="label-default"></label>
+            </div>
+          </li>
+          -->
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="row">
+      <div id="loader" style="display:none;">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="lading"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="popup" class="ol-popup">
+    <!--<a href="#" id="popup-closer" class="ol-popup-closer"> </a>-->
+    <div id="popup-content">
+      <div id="linker-handi" class="hide linker-contents">
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="handiCategory-Label">
+            Category:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="handi-poiCategory">
+            -
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="handiCategoryDetail-Label">
+            Category Detail:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="handi-poiCategoryDetail">
+            -
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="handiResource-Label">
+            Resource:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="handi-resource">
+            -
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="handiEtc-Label">
+            Etc.:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="handi-etc">
+            -
+          </div>
+        </div>
+      </div>
+
+
+      <div id="linker-enter" class="hide linker-contents">
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="enterExitNum-Label">
+            Number:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="enter-exitNum">
+            -
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="enterExitInfo-Label">
+            Info.:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="enter-exitInfo">
+            -
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="enterConvenience-Label">
+            Convenience:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="enter-Convenience">
+            -
+          </div>
+        </div>
+      </div>
+
+      <div id="linker-shopping" class="hide linker-contents">
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="shopName-Label">
+            Name:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="shop-shopName">
+            -
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="shopNumber-Label">
+            Number:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="shop-shopNumber">
+            -
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="shopCategory-Label">
+            Category:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="shop-shopCategory">
+            -
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="shopCategoryDetail-Label">
+            Category Detail:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="shop-shopCategoryDetail">
+            -
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="shopTel-Label">
+            Telephone:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="shop-shopTel">
+            -
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="shopHpAddress-Label">
+            Homepage:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="shop-shopHpAddress">
+            -
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5" id="shopNote-Label">
+            Note:
+          </div>
+          <div class="col-xs-7 col-sm-7 col-md-7 inputs" id="shop-shopNote">
+            -
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div id="nearbyPopup" class="nearby-popup hide">
+    <!--<a href="#" id="nearby-closer" class="ol-popup-closer"></a>-->
+    <h3>Nearby Information</h3>
+    <div id="nearby-content">
+      <div class="row">
+        <div class="col-sm-4 col-md-4" id="bldNameLabel">
+          Name:
+        </div>
+        <div class="col-sm-8 col-md-8" id="nearby-bldName">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-md-4" id="nearbyInfoLabel">
+          Info.:
+        </div>
+        <div class="col-sm-8 col-md-8" id="nearby-nearbyInfo">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+<script>
+  $(function(){
+    resizeContent();
+    window.addEventListener('resize', function(event){
+      resizeContent();
+    });
+    var curData = null;
+    var center = ol.proj.transform([127.010031, 37.582200], 'EPSG:4326', 'EPSG:3857');
+    var layers = [
+        new ol.layer.Tile({
+          title : 'background-map',
+          source : new ol.source.OSM()
+        })
+    ];
+    proj4.defs("EPSG:5179", "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs");
+
+    var view = new ol.View({
+      center : center,
+      zoom : 12,
+      minZoom : 10
+    });
+    var map = new ol.Map({
+      target : 'map',
+      layers : layers,
+      view : view
+    });
+
+    //Request Data Name
+    requestBuildingList();
+
+    //Search
+    $('#dataSearch').keyup(function(evt){
+      var val = $(this).val();
+      var menu =$('#dataListMenu');
+      var listRoot = $('#dataList');
+      var listContent = listRoot.children('li');
+      if (val ==''){
+        menu.removeClass('open');
+        for(var i=0; i<listContent.length; i++){
+          $(listContent[i]).css('display', '');
+        }
+        return 0;
+      }
+      menu.addClass('open');
+
+      for(var i=0; i<listContent.length; i++){
+        var content = $(listContent[i]).children('a')[0];
+        if (content.innerHTML.toUpperCase().indexOf(val) > -1) {
+          $(listContent[i]).css('display', '');
+        } else {
+          $(listContent[i]).css('display', 'none');
+        }
+      }
+    });
+
+    //Request Object
+    $(document).on('click', '.list-evt', function(evt){
+      var data = $(this).data('val');
+      curData = data;
+      var center = ol.proj.fromLonLat([ data['lon'], data['lat'] ]);
+      map.getView().setZoom(17);
+      map.getView().setCenter(center);
+
+
+      removeLayers(map, 'linker-');
+      $('input[name="linkerContent"]').each(function(){
+        this.checked = false;
+      });
+      $('#nearbyPopup').addClass('hide');
+      $('#nearbyPopup').removeClass('show');
+
+
+      requestFloorData(data['bldId'], function(floorInfo){
+        var radio = $('#layerRadio');
+        radio.empty();
+        $('#curName').html(data['bldName'] + ' - ' + 'None');
+        $('.link-content-menu').removeClass('hide');
+        $('.link-content-menu').addClass('show');
+        for(key in floorInfo){
+          radio.append(
+            '<div class="funkyradio-success">'
+            + '<input type="radio" name="floorInfo" data-name="'+ floorInfo[key] + '"'
+            + ' data-idx='+ key
+            + ' data-json='+ JSON.stringify(data)
+            + ' id="radio-' + key + '">'
+            +'<label for="radio-' + key + '">' + floorInfo[key]  + '</label>'
+            +'</div>'
+          )
+        }
+      });
+    });
+
+    //Change Index Radio
+    $(document).on('change', 'input[name=floorInfo]:radio', function(evt){
+      var json = $(this).data('json');
+      var idx = $(this).data('idx');
+      var name = $(this).data('name');
+      requestBuildingData(true, json['bldId'], idx, function(objs){
+        $('#curName').html(json['bldName'] + ' - ' + name);
+        $('.floor-objects').css('display','none');
+
+        removeLayers(map, 'building-');
+
+        for (var i=0; i<objs.length; i++){
+          var obj = objs[i];
+          for(objKey in objs[i]){
+            if (objKey =='Facility' || objKey =='GuideLine'){
+              continue;
+            }
+            var geojson = (new ol.format.GeoJSON({
+              defaultDataProjection: ol.proj.get('EPSG:5179'),
+              featureProjection : ol.proj.get('EPSG:3857')
+            }))
+              .readFeatures(JSON.parse(objs[i][objKey]), {
+                defaultDataProjection : ol.proj.get('EPSG:5179'),
+                featureProjection : ol.proj.get('EPSG:3857')
+              });
+            var style = new ol.style.Style({
+              stroke : new ol.style.Stroke({
+                color : selectColor(objKey, 'stroke'),
+                width : 1.5
+              }),
+              fill : new ol.style.Fill({
+                color : selectColor(objKey, 'fill')
+              })
+            });
+            var geojsonSource = new ol.source.Vector({
+              features : geojson
+            });
+            var vectorLayer = new ol.layer.Vector({
+              title : 'building-' + objKey,
+              source : geojsonSource,
+              style : style
+            });
+            map.addLayer(vectorLayer);
+            setIndex(objKey, vectorLayer);
+            var checks = $('.floor-objects');
+            for(var j=0; j<checks.length; j++){
+              var chkText = $(checks[j]).text().trim();
+              if (objKey.toUpperCase() == chkText){
+                $(checks[j]).css('display', '');
+                $('#chk' + objKey).attr('checked', true);
+              }
+            }
+          }
+        }
+      });
+    });
+
+    var container = document.getElementById('popup');
+    var overlay = new ol.Overlay({
+      element : container,
+      autoPan : true,
+      autoPanAnimation : {
+        duration : 250
+      }
+    });
+    map.addOverlay(overlay);
+
+    $(document).on('change', 'input[name=floorObject]:checkbox', function(evt){
+      var val = $(this).val();
+      var layer = getLayer(map, 'building-' + val);
+      var checked = $(this).is(':checked');
+      layer.setVisible(checked);
+    });
+
+    $(document).on('change', 'input[name=linkerContent]:checkbox', function(evt){
+      var val = $(this).val();
+      var checked = $(this).is(':checked');
+
+      overlay.setPosition(undefined);
+      if (checked == true) {
+        requestLinkerContentList(val, curData['bldId'], function (data) {
+          if (val == 'nearby'){
+            $('#nearbyPopup').removeClass('hide');
+            $('#nearbyPopup').addClass('show');
+
+            $('#nearby-bldName').text(data['bldName']['en']);
+            $('#nearby-nearbyInfo').text(data['nearbyInfo']['en']);
+
+          } else {
+            addPOIs(map, 'linker-' + val, data);
+          }
+        });
+      } else {
+        removePOIs(map, 'linker-' + val);
+        $('#nearbyPopup').addClass('hide');
+        $('#nearbyPopup').removeClass('show');
+      }
+
+    });
+
+    function mapEvt(evt){
+      var feature = map.forEachFeatureAtPixel(evt.pixel, function(feature, layer){
+        return feature;
+      });
+      var coordinate = evt.coordinate;
+      overlay.setPosition(undefined);
+      if (typeof (feature) !== 'undefined'){
+        var title = feature.get('title');
+
+        // POI Click Event
+        if ( typeof (title) !== 'undefined'){
+          var info = JSON.parse(feature.get('info'));
+          $('.linker-contents').removeClass('show');
+          $('.linker-contents').addClass('hide');
+          $('#' + title).removeClass('hide');
+          $('#' + title).addClass('show');
+          try {
+            var type = title.split('-')[1];
+            requestLinkerContent(type, info['poiId'], function(data){
+              if (title == 'linker-handi') {
+                $('#handi-poiCategory').text(info['poiCategory']['en']);
+                $('#handi-poiCategoryDetail').text(info['poiCategoryDetail']['en']);
+                $('#handi-resource').text(JSON.parse(data['resource'])['en']);
+                $('#handi-etc').text(JSON.parse(data['etc'])['en']);
+              } else if (title == 'linker-enter') {
+                $('#enter-exitNum').text(data['exitNum']);
+                $('#enter-exitInfo').text(data['exitInfo']['en']);
+                $('#enter-Convenience').text(data['convenience']['en']);
+              } else if (title == 'linker-shopping') {
+                $('#shop-shopName').text(data['shopName']['en']);
+                $('#shop-shopNumber').text(data['shoppingNum']);
+                $('#shop-shopCategory').text(data['scCategory']['en']);
+                $('#shop-shopCategoryDetail').text(data['scCategoryDetail']['en']);
+                $('#shop-shopTel').text(data['tel']);
+                $('#shop-shopHpAddress').text(data['hpAddress']);
+                $('#shop-shopNumber').text(JSON.parse(data['note'])['en']);
+              }
+
+              // Noting "-" setting
+              var inputs = $('.inputs');
+              for (var i=0; i<inputs.length; i++){
+                var text = $(inputs[i]).text();
+                if (text == ''){
+                  $(inputs[i]).text('-');
+                }
+              }
+
+              // loading floor Data
+              var idx = info['floorIdx'];
+              $('#radio-' + idx).attr('checked', true).trigger('change');
+            });
+          }catch(e){
+            console.log(e);
+          }
+          overlay.setPosition(coordinate);
+        }
+
+      }
+
+
+    }
+    map.on('click', mapEvt);
+    map.on('pointermove', function(evt){
+      var pixel = map.getEventPixel(evt.originalEvent);
+      var feature = map.forEachFeatureAtPixel(evt.pixel, function(feature, layer){
+        return feature;
+      });
+      map.getTargetElement().style.cursor = '';
+      if (feature){
+        var type = feature.getGeometry() instanceof ol.geom.Point;
+        if (type){
+          map.getTargetElement().style.cursor = 'pointer';
+        } else {
+          map.getTargetElement().style.cursor = '';
+        }
+      }
+    });
+
+  //  seoulMapInfo(map);
+
+  });
+</script>
+<script src="./js/main.js"></script>
+<script src="js/util.js"></script>
+<link rel="stylesheet" href="css/main.css" />
+<link rel="stylesheet" href="css/loading.css" />
+<link rel="stylesheet" href="css/navbar.css" />
+</html>

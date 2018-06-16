@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -19,7 +21,8 @@ import com.openGDSMobileApplicationServer.service.PublicData;
 public class SeoulOpenDataDAO implements PublicData {
 
 	 
-	
+
+	Logger log = LogManager.getLogger("org.springframework");
 	SeoulOpenDataDAO(){
 	}
 	
