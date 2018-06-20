@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository("geodao")
 public class GeoServerManagerDAO{
  
-	static String geoServerUrl = "http://localhost:8081/geoserver";
+	static String geoServerUrl = "http://localhost:8080/geoserver";
 	static String geoServerUser = "admin";
 	static String geoServerPw = "geoserver";
 	
