@@ -1,4 +1,4 @@
-OpenGDS Application Server 1.0
+OpenGDS Application Server 2.5
 =================
 > + Public Data Request/Response and GeoServer Connect Java Module
 > + Experimental Web Server System
